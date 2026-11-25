@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch, useAppSelector } from "../../hooks/hoots";
 import { addToCartItem, removeFromCartItem } from "../../store/profile";
 import { checkIsCartProduct, toggleCartProduct } from "../../hooks/query";
+import { LoginPromptModal } from "../../UI/LoginPromptModal";
 import "./Card.css";
 
 export interface Product {
@@ -45,6 +46,8 @@ function Card({ product, onAddToCart }: CardProps) {
   const [inCart, setInCart] = useState<boolean>(isInProfileCart);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Sync with Redux profile state whenever it changes
   useEffect(() => {
@@ -77,12 +80,13 @@ function Card({ product, onAddToCart }: CardProps) {
   // When clicking the Add Cart button:
   const handleAddToCart = async () => {
     if (!token && !profile) {
-      alert("Please login to manage your cart.");
+      setShowLoginModal(true);
       return;
     }
 
     try {
       setIsLoading(true);
+      setErrorMessage(null);
 
       // 1. Call POST /cart/:productId
       const result = await toggleCartProduct(product._id, 1);
@@ -110,7 +114,8 @@ function Card({ product, onAddToCart }: CardProps) {
       console.error("Cart action failed:", error);
       const errorMsg =
         error.response?.data?.message || "Failed to update cart. Please try again.";
-      alert(errorMsg);
+      setErrorMessage(errorMsg);
+      setTimeout(() => setErrorMessage(null), 4000);
     } finally {
       setIsLoading(false);
     }
@@ -251,7 +256,19 @@ function Card({ product, onAddToCart }: CardProps) {
             </>
           )}
         </button>
+
+        {errorMessage && (
+          <div className="card-error-notice" role="alert">
+            {errorMessage}
+          </div>
+        )}
       </div>
+
+      <LoginPromptModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        productTitle={product.title}
+      />
     </div>
   );
 }

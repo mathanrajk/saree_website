@@ -215,3 +215,15 @@
 .add-to-cart-btn:disabled {
   opacity: 0.85;
 }
+
+.card-error-notice {
+  margin-top: 0.5rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  font-size: 0.78rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: 6px;
+  text-align: center;
+  line-height: 1.3;
+}

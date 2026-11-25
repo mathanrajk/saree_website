@@ -442,6 +442,28 @@ body {
   text-align: center;
 }
 
+.auth-notice-alert {
+  background-color: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #881337;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+  text-align: left;
+  line-height: 1.4;
+}
+
+.auth-notice-alert svg {
+  flex-shrink: 0;
+  color: #881337;
+}
+
 .modal-oauth-section {
   margin-bottom: 1.25rem;
 }

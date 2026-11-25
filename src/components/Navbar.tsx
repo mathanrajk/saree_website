@@ -29,7 +29,20 @@ export const Navbar = () => {
   const [password, setPassword] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [authError, setAuthError] = useState<string | null>(null);
+  const [authNotice, setAuthNotice] = useState<string | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState<boolean>(false);
+
+  // Listen for global open-auth-modal events
+  useEffect(() => {
+    const handleOpenAuth = (e: any) => {
+      setAuthMode(e.detail?.mode || 'login');
+      setAuthNotice(e.detail?.message || null);
+      setAuthError(null);
+      setIsModalOpen(true);
+    };
+    window.addEventListener('open-auth-modal', handleOpenAuth);
+    return () => window.removeEventListener('open-auth-modal', handleOpenAuth);
+  }, []);
 
   // Sync Firebase auth state with Redux store
   useEffect(() => {
@@ -82,6 +95,7 @@ export const Navbar = () => {
     setPassword('');
     setName('');
     setAuthError(null);
+    setAuthNotice(null);
     setAuthMode('login');
   };
 
@@ -124,7 +138,27 @@ export const Navbar = () => {
       closeModal();
       closeMenu();
     } catch (error: any) {
-      if (error.code !== 'auth/popup-closed-by-user') {
+      const host = window.location.hostname;
+
+      if (error?.code === 'auth/unauthorized-domain') {
+        // The page's hostname is not listed in Firebase Auth > Settings > Authorized domains.
+        setAuthError(
+          `Google sign-in is not allowed from "${host}". Add this domain in Firebase Console > Authentication > Settings > Authorized domains.`
+        );
+        console.error(
+          `Google Sign-In Error: "${host}" is not an authorized domain for Firebase project "${import.meta.env.VITE_FIREBASE_PROJECT_ID}". ` +
+            `Add it at https://console.firebase.google.com/project/${import.meta.env.VITE_FIREBASE_PROJECT_ID}/authentication/settings`
+        );
+      } else if (error?.code === 'auth/operation-not-allowed') {
+        setAuthError('Google sign-in is disabled for this project. Enable the Google provider in Firebase Console > Authentication > Sign-in method.');
+        console.error('Google Sign-In Error:', error);
+      } else if (error?.code === 'auth/popup-blocked') {
+        setAuthError('Your browser blocked the sign-in popup. Allow popups for this site and try again.');
+        console.error('Google Sign-In Error:', error);
+      } else if (
+        error?.code !== 'auth/popup-closed-by-user' &&
+        error?.code !== 'auth/cancelled-popup-request'
+      ) {
         setAuthError('Google sign-in failed. Please try again.');
         console.error('Google Sign-In Error:', error);
       }
@@ -407,6 +441,18 @@ export const Navbar = () => {
             {authError && (
               <div className="auth-error-alert" role="alert">
                 {authError}
+              </div>
+            )}
+
+            {/* Info Notice Alert */}
+            {authNotice && (
+              <div className="auth-notice-alert" role="status">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span>{authNotice}</span>
               </div>
             )}
 
