@@ -1,0 +1,309 @@
+/* ==========================================================================
+   Customized Page Styles - Appu Sarees Luxury Boutique
+   ========================================================================== */
+
+.customized-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3.5rem;
+}
+
+/* Breadcrumb Navigation */
+.customized-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 1.25rem;
+}
+
+.customized-breadcrumb a {
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.customized-breadcrumb a:hover {
+  color: #881337;
+}
+
+.customized-breadcrumb .separator {
+  color: #cbd5e1;
+}
+
+.customized-breadcrumb .current {
+  color: #881337;
+  font-weight: 600;
+}
+
+/* Bespoke Highlights Banner */
+.customized-perks-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+  background: linear-gradient(135deg, #fff1f2 0%, #fdf2f8 50%, #fafaf9 100%);
+  border: 1px solid #fecdd3;
+  border-radius: 12px;
+  padding: 0.85rem 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.perk-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #881337;
+}
+
+.perk-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.perk-text {
+  color: #475569;
+}
+
+.perk-text strong {
+  color: #881337;
+  display: block;
+  font-size: 0.82rem;
+}
+
+/* Filter & Controls Toolbar */
+.customized-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.filter-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.filter-label-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.filter-count-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Sort dropdown */
+.sort-select-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sort-select-wrapper label {
+  font-size: 0.82rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.sort-select {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #1e293b;
+  background-color: #ffffff;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.sort-select:focus {
+  border-color: #881337;
+}
+
+/* Tag Pills Group */
+.tag-pills-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.tag-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 9999px;
+  border: 1.5px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.tag-pill-btn:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #1e293b;
+  transform: translateY(-1px);
+}
+
+.tag-pill-btn.active {
+  background-color: #881337;
+  border-color: #881337;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(136, 19, 55, 0.25);
+}
+
+.tag-pill-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.1rem 0.45rem;
+  border-radius: 9999px;
+  background-color: #f1f5f9;
+  color: #64748b;
+  line-height: 1.2;
+}
+
+.tag-pill-btn.active .tag-pill-badge {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* Clear Filter Button */
+.clear-tag-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  color: #e11d48;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+}
+
+.clear-tag-btn:hover {
+  background-color: #ffe4e6;
+}
+
+/* Empty State */
+.customized-empty-state {
+  text-align: center;
+  padding: 4.5rem 1.5rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1.5px dashed #cbd5e1;
+  margin: 1.5rem 0 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-icon-wrap {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fff1f2 0%, #fee2e2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 4px 12px rgba(136, 19, 55, 0.08);
+}
+
+.empty-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.45rem;
+}
+
+.empty-desc {
+  font-size: 0.92rem;
+  color: #64748b;
+  max-width: 460px;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.empty-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.5rem;
+  background-color: #881337;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(136, 19, 55, 0.2);
+  text-decoration: none;
+}
+
+.empty-reset-btn:hover {
+  background-color: #70102d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(136, 19, 55, 0.3);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+  .customized-page {
+    padding: 1rem 0.75rem 2.5rem;
+  }
+
+  .customized-perks-bar {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .filter-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sort-select-wrapper {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
