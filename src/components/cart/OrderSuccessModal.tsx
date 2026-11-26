@@ -30,6 +30,12 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({
     navigate('/');
   };
 
+  const handleViewOrder = () => {
+    onClose();
+    const isObjectId = /^[a-f\d]{24}$/i.test(orderInfo.orderId);
+    navigate(isObjectId ? `/order-history/${orderInfo.orderId}` : '/order-history');
+  };
+
   const isPhonePe = orderInfo.paymentGateway === 'phonepe';
 
   return (
@@ -104,14 +110,23 @@ export const OrderSuccessModal: React.FC<OrderSuccessModalProps> = ({
           <span>We've dispatched an order receipt with tracking details to your registered email.</span>
         </div>
 
-        {/* Continue Button */}
-        <button
-          type="button"
-          className="continue-shop-btn"
-          onClick={handleContinueShopping}
-        >
-          Explore More Sarees
-        </button>
+        {/* Actions */}
+        <div className="success-actions">
+          <button
+            type="button"
+            className="continue-shop-btn"
+            onClick={handleContinueShopping}
+          >
+            Explore More Sarees
+          </button>
+          <button
+            type="button"
+            className="view-order-history-btn"
+            onClick={handleViewOrder}
+          >
+            View Order History
+          </button>
+        </div>
       </div>
     </div>
   );

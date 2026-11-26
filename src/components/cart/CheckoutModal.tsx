@@ -266,6 +266,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             // 6. Clear cart state in Redux & invalidate React Query
             dispatch(clearCart());
             queryClient.invalidateQueries({ queryKey: ['getCartAllProduct'] });
+            queryClient.invalidateQueries({ queryKey: ['orderHistory'] });
 
             // 7. Invoke order success callback
             const createdOrder = res.Order;

@@ -138,6 +138,7 @@ function CartCart() {
         // Clear cart in Redux & React Query
         dispatch(clearCart());
         queryClient.invalidateQueries({ queryKey: ['getCartAllProduct'] });
+        queryClient.invalidateQueries({ queryKey: ['orderHistory'] });
 
         setPhonePeStatus({ status: null });
         searchParams.delete('phonepe');

@@ -5,6 +5,8 @@ import Home from './pages/Home';
 import Product from './pages/Product';
 import Customized from './pages/Customized';
 import Cart from './pages/Cart';
+import OrderHistory from './pages/OrderHistory';
+import OrderDetail from './pages/OrderDetail';
 import './App.css';
 
 export const App: React.FC = () => {
@@ -20,6 +22,10 @@ export const App: React.FC = () => {
             <Route path="/products/:id" element={<Product />} />
             <Route path="/product/:id" element={<Product />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/order-history" element={<OrderHistory />} />
+            <Route path="/order-history/:orderId" element={<OrderDetail />} />
+            <Route path="/orders" element={<OrderHistory />} />
+            <Route path="/orders/:orderId" element={<OrderDetail />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>

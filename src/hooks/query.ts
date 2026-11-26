@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import client from "../api/client";
 import { useAppSelector } from "./hoots";
+import type { OrderDocument, OrderItem } from "../types/order";
 
 export const fetchallProduct = async (): Promise<any[]> => {
   const { data } = await client.get('/products');
@@ -312,4 +313,81 @@ export const createOrderApi = async (
 ): Promise<{ Order: any }> => {
   const { data } = await client.post('/orders/create', orderPayload);
   return data;
+};
+
+/**
+ * Fetches order history for a user via GET /orders/orderHistory/:userId
+ * (falling back to GET /orders/orderHistory when authenticated without a userId).
+ */
+export const fetchOrderHistory = async (userId?: string): Promise<OrderDocument[]> => {
+  const endpoint = userId ? `/orders/orderHistory/${userId}` : '/orders/orderHistory';
+  const { data } = await client.get(endpoint);
+  const orders: OrderDocument[] = Array.isArray(data?.Order)
+    ? data.Order
+    : Array.isArray(data)
+    ? data
+    : [];
+
+  return [...orders].sort((a, b) => {
+    const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return timeB - timeA;
+  });
+};
+
+export const useFetchOrderHistory = (userId?: string) => {
+  const { token, profile } = useAppSelector((state) => state.profile);
+  const targetUserId = userId || profile?._id || profile?.firebaseUid;
+  const isAuthenticated = Boolean(token || profile);
+
+  return useQuery({
+    queryKey: ['orderHistory', targetUserId],
+    queryFn: () => fetchOrderHistory(targetUserId),
+    enabled: isAuthenticated && Boolean(targetUserId),
+  });
+};
+
+/**
+ * Fetches a single order by ID via GET /orders/:orderId.
+ * If line items contain unpopulated product IDs, resolves their product details.
+ */
+export const fetchOrderById = async (orderId: string): Promise<OrderDocument | null> => {
+  const { data } = await client.get(`/orders/${orderId}`);
+  const order: OrderDocument | null = data?.Order ?? null;
+  if (!order) return null;
+
+  const products = Array.isArray(order.products) ? order.products : [];
+  const hasUnpopulated = products.some((item) => typeof item.product === 'string');
+
+  if (!hasUnpopulated) {
+    return order;
+  }
+
+  const hydratedProducts: OrderItem[] = await Promise.all(
+    products.map(async (item) => {
+      if (typeof item.product !== 'string') return item;
+      try {
+        const productDoc = await fetchProductById(item.product);
+        return {
+          ...item,
+          product: productDoc || item.product,
+        };
+      } catch {
+        return item;
+      }
+    })
+  );
+
+  return {
+    ...order,
+    products: hydratedProducts,
+  };
+};
+
+export const useFetchOrderById = (orderId?: string) => {
+  return useQuery({
+    queryKey: ['order', orderId],
+    queryFn: () => fetchOrderById(orderId!),
+    enabled: Boolean(orderId),
+  });
 };
