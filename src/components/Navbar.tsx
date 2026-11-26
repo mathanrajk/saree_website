@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { NavLink, Link, useLocation } from 'react-router-dom';
 import {
   signInWithPopup,
   GoogleAuthProvider,
@@ -19,8 +19,12 @@ const provider = new GoogleAuthProvider();
 export const Navbar = () => {
   const dispatch = useAppDispatch();
   const { profile } = useAppSelector((state) => state.profile);
+  const location = useLocation();
+  const navRef = useRef<HTMLElement>(null);
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [openPath, setOpenPath] = useState<string | null>(null);
+  const isOpen = openPath === location.pathname;
 
   // Modal & Auth State
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -86,8 +90,44 @@ export const Navbar = () => {
     return () => unsubscribe();
   }, [dispatch]);
 
-  const toggleMenu = () => setIsOpen((prev) => !prev);
-  const closeMenu = () => setIsOpen(false);
+  const toggleMenu = () =>
+    setOpenPath((prev) => (prev === location.pathname ? null : location.pathname));
+  const closeMenu = () => setOpenPath(null);
+
+  // Close mobile menu on outside tap/click, Escape key, or desktop resize
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setOpenPath(null);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpenPath(null);
+        menuToggleRef.current?.focus();
+      }
+    };
+
+    const mediaQuery = window.matchMedia('(min-width: 769px)');
+    const handleViewportChange = (e: MediaQueryListEvent) => {
+      if (e.matches) {
+        setOpenPath(null);
+      }
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+    mediaQuery.addEventListener('change', handleViewportChange);
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+      mediaQuery.removeEventListener('change', handleViewportChange);
+    };
+  }, [isOpen]);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -277,7 +317,7 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav className="navbar">
+      <nav ref={navRef} className="navbar" aria-label="Primary">
         <div className="nav-container">
           {/* Brand / Logo */}
           <Link to="/" className="nav-logo" onClick={closeMenu}>
@@ -289,14 +329,14 @@ export const Navbar = () => {
           </Link>
 
           {/* Navigation Links */}
-          <div className={`nav-links ${isOpen ? 'open' : ''}`}>
+          <div id="primary-navigation" className={`nav-links ${isOpen ? 'open' : ''}`}>
             <NavLink
               to="/"
               end
               className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
               onClick={closeMenu}
             >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
               </svg>
@@ -308,7 +348,7 @@ export const Navbar = () => {
               className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
               onClick={closeMenu}
             >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
                 <path d="M2 17l10 5 10-5"></path>
                 <path d="M2 12l10 5 10-5"></path>
@@ -322,7 +362,7 @@ export const Navbar = () => {
               onClick={closeMenu}
             >
               <div className="nav-cart-wrapper">
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="9" cy="21" r="1"></circle>
                   <circle cx="20" cy="21" r="1"></circle>
                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
@@ -362,7 +402,7 @@ export const Navbar = () => {
                     disabled={isAuthLoading}
                     title="Sign Out"
                   >
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                       <polyline points="16 17 21 12 16 7"></polyline>
                       <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -379,7 +419,7 @@ export const Navbar = () => {
                     closeMenu();
                   }}
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                   </svg>
@@ -391,14 +431,17 @@ export const Navbar = () => {
 
           {/* Mobile Hamburger Button */}
           <button
+            ref={menuToggleRef}
             type="button"
             className={`menu-toggle ${isOpen ? 'active' : ''}`}
             onClick={toggleMenu}
             aria-label="Toggle navigation menu"
+            aria-expanded={isOpen}
+            aria-controls="primary-navigation"
           >
-            <span className="bar"></span>
-            <span className="bar"></span>
-            <span className="bar"></span>
+            <span className="bar" aria-hidden="true"></span>
+            <span className="bar" aria-hidden="true"></span>
+            <span className="bar" aria-hidden="true"></span>
           </button>
         </div>
       </nav>
